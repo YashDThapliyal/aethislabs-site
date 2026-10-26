@@ -54,7 +54,6 @@ article, .masthead, .colophon { max-width: var(--col); }
 }
 .brand { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; font-size: 1.05rem; }
 .logo { width: 1.15rem; height: 1.15rem; color: var(--ink); align-self: center; }
-.dateline { margin: 0; color: var(--gray); font-size: 0.95rem; }
 
 /* Title and abstract */
 h1 {
