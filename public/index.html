@@ -32,58 +32,40 @@
 
   <main>
     <section class="hero wrap">
-      <div class="hero-copy">
-        <p class="eyebrow">Aethis Helm</p>
-        <h1>Helm picks your agent's next tool. <em>Faster, and never one that doesn't exist.</em></h1>
-        <p class="sub">A single read of the task and tools scores every option at once. No generation, no hallucinated tool names.</p>
-        <a class="button" href="mailto:yash@aethislabs.com?subject=Aethis%20Helm%20access">Request access</a>
-        <p class="etymology">"Aethis" comes from aether, the invisible layer the Greeks believed everything moved through. A helm is what you steer with.</p>
-      </div>
-
-      <svg class="hero-mark build" viewBox="2 5 28 25" fill="none" stroke-linecap="round" aria-hidden="true">
-        <g stroke="currentColor" stroke-width=".06">
-          <circle class="b-guide" cx="16" cy="21" r="11" pathLength="1"/>
-          <path class="b-guide b-guide-2" d="M7.19 19.61 A11.5 11.5 0 0 1 24.81 19.61" pathLength="1"/>
-          <line class="b-guide" x1="2.5" y1="21" x2="29.5" y2="21" pathLength="1"/>
-          <line class="b-guide b-guide-2" x1="16" y1="29.5" x2="16" y2="5.5" pathLength="1"/>
-        </g>
-        <path class="b-arc" d="M5 21 A11 11 0 0 1 27 21" stroke="currentColor" stroke-width=".32" pathLength="1"/>
-        <g class="b-tracer"><circle cx="5" cy="21" r=".55" fill="var(--accent)"/></g>
-        <g opacity=".35" stroke="currentColor" stroke-width=".32">
-          <line class="b-ray-l" x1="16" y1="27" x2="16" y2="15.5"/>
-          <line class="b-ray-r" x1="16" y1="27" x2="16" y2="15.5"/>
-        </g>
-        <line class="b-ray-c" x1="16" y1="27" x2="16" y2="12.5" stroke="var(--accent)" stroke-width=".38" pathLength="1"/>
-        <circle class="b-ring" cx="16" cy="10" r="1.9" stroke="var(--accent)" stroke-width=".12"/>
-        <circle class="b-star" cx="16" cy="10" r="1.9" fill="var(--accent)"/>
-        <circle class="b-origin" cx="16" cy="27" r=".85" fill="currentColor"/>
-      </svg>
+      <p class="eyebrow">Aethis Helm</p>
+      <h1>Helm picks your agent's next tool. <em>Faster, and never one that doesn't exist.</em></h1>
+      <p class="sub">A single read of the task and tools scores every option at once. No generation, no hallucinated tool names.</p>
+      <a class="button" href="mailto:yash@aethislabs.com?subject=Aethis%20Helm%20access">Request access</a>
     </section>
 
-    <section class="demo-section wrap" aria-label="Aethis Helm demo">
-      <div class="demo">
-        <div class="demo-bar">
-          <span>helm</span>
-          <span class="demo-status" id="demo-status"></span>
-        </div>
-        <div class="demo-field">
-          <span class="field-label">task</span>
-          <span class="field-value"><span id="task-text"></span><span class="caret" aria-hidden="true"></span></span>
-        </div>
-        <div class="demo-field">
-          <span class="field-label">prior calls</span>
-          <span class="field-value prior" id="prior-calls"></span>
-        </div>
+    <section class="sky" aria-label="Aethis Helm demo">
+      <svg class="dome" id="dome" viewBox="0 0 1000 500" fill="none" stroke-linecap="round" aria-hidden="true">
+        <g class="sky-lines">
+          <line class="sky-draw" x1="60" y1="470" x2="940" y2="470" pathLength="1"/>
+          <path class="sky-draw sky-faint" d="M360 470 A140 140 0 0 1 640 470" pathLength="1"/>
+          <path class="sky-draw sky-faint" d="M250 470 A250 250 0 0 1 750 470" pathLength="1"/>
+          <path class="sky-draw sky-main" d="M140 470 A360 360 0 0 1 860 470" pathLength="1"/>
+        </g>
+        <g id="rays"></g>
+        <line class="needle" id="needle" x1="500" y1="470" x2="500" y2="122" pathLength="1"/>
+        <circle class="ring" id="ring" cx="500" cy="110" r="10"/>
+        <g id="points"></g>
+        <g id="labels"></g>
+        <circle class="origin" cx="500" cy="470" r="6"/>
+      </svg>
+
+      <div class="readout wrap">
+        <p class="status" id="demo-status">&nbsp;</p>
+        <p class="task"><span class="field-label">task</span><span id="task-text"></span><span class="caret" aria-hidden="true"></span></p>
+        <p class="prior"><span class="field-label">prior calls</span><span id="prior-calls"></span></p>
         <ol class="rows" id="tool-list"></ol>
+        <p class="note">Illustrative example.</p>
       </div>
-      <p class="note">Illustrative example.</p>
     </section>
 
     <section class="api wrap" aria-labelledby="api-title">
-      <div class="section-head">
-        <p class="section-label">API</p>
-        <h2 id="api-title">One request. Every tool scored.</h2>
-      </div>
+      <p class="section-label">API</p>
+      <h2 id="api-title">One request. Every tool scored.</h2>
       <div class="code-pair">
         <figure class="code">
           <figcaption>Request</figcaption>
@@ -113,25 +95,23 @@
     </section>
 
     <section class="results wrap" aria-labelledby="results-title">
-      <div class="section-head">
-        <p class="section-label">Results</p>
-        <h2 id="results-title">Measured, not promised.</h2>
-      </div>
+      <p class="section-label">Results</p>
+      <h2 id="results-title">Measured, not promised.</h2>
       <div class="points">
         <div class="point">
-          <h3>Never invents a tool</h3>
           <p class="figure">0%</p>
-          <p>invented tool names, vs 0.9% for the usual generate-the-name approach.</p>
+          <h3>Never invents a tool</h3>
+          <p>0% invented tool names, vs 0.9% for the usual generate-the-name approach.</p>
         </div>
         <div class="point">
-          <h3>The right tool, close at hand</h3>
           <p class="figure">97.5%</p>
-          <p>of the time the correct tool is in the top 5, vs 90.7%.</p>
+          <h3>The right tool, close at hand</h3>
+          <p>Correct tool in the top 5 97.5% of the time, vs 90.7%.</p>
         </div>
         <div class="point">
+          <p class="figure">2.5x</p>
           <h3>About 2.5x faster</h3>
-          <p class="figure">247 ms</p>
-          <p>per decision vs 632 ms on a laptop.</p>
+          <p>247 ms per decision vs 632 ms on a laptop.</p>
         </div>
       </div>
       <p class="caption">Research results on ToolBench with Qwen2.5-1.5B across 3 runs. Top-1 accuracy is on par with the baseline (64.0% vs 66.6%).</p>
@@ -139,6 +119,7 @@
 
     <section class="contact wrap">
       <p>For inquiries, email <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a></p>
+      <p class="etymology">"Aethis" comes from aether, the invisible layer the Greeks believed everything moved through. A helm is what you steer with.</p>
     </section>
   </main>
 
