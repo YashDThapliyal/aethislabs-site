@@ -74,33 +74,35 @@
           <span class="demo-text" id="task-text"></span><span class="caret" aria-hidden="true"></span>
         </div>
         <div class="demo-cols">
-          <div class="col" id="col-before">
+          <div class="col col-reading" id="col-before">
             <div class="col-head">
               <div>
-                <p class="col-title">Without ranking</p>
-                <p class="col-sub">samples from a flat guess</p>
+                <p class="col-title">Agent on its own</p>
+                <p class="col-sub">reads every description, then guesses</p>
               </div>
               <span class="col-status" data-status></span>
             </div>
-            <p class="dist-label">p(tool | task)</p>
+            <p class="dist-label">tools</p>
             <ol class="rows" data-rows></ol>
+            <p class="log" data-log aria-hidden="true"></p>
             <div class="trail" data-trail></div>
           </div>
           <div class="col col-after" id="col-after">
             <div class="col-head">
               <div>
                 <p class="col-title">With ActionRank</p>
-                <p class="col-sub">ranked before the first call</p>
+                <p class="col-sub">scores every tool in one pass</p>
               </div>
               <span class="col-status" data-status></span>
             </div>
-            <p class="dist-label">p(tool | task)</p>
+            <p class="dist-label">score</p>
             <ol class="rows" data-rows></ol>
+            <p class="log" data-log aria-hidden="true"></p>
             <div class="trail" data-trail></div>
           </div>
         </div>
       </div>
-      <p class="note">Illustrative example. Probabilities and calls are for demonstration only.</p>
+      <p class="note">Illustrative example. Scores and calls are for demonstration only.</p>
     </section>
 
     <section class="section wrap" aria-labelledby="why-title">

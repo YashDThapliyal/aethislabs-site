@@ -6,48 +6,57 @@
     "update_address", "cancel_subscription", "create_ticket", "lookup_invoice"
   ];
 
-  // Illustrative only. Weights follow TOOLS order and are normalized to probabilities.
+  var DESCRIPTIONS = {
+    search_orders: "Find orders by customer, date, or status",
+    issue_refund: "Refund a payment for an order",
+    send_email: "Send an email to a customer",
+    get_customer: "Look up a customer's account details",
+    update_address: "Change the shipping address on an order",
+    cancel_subscription: "Cancel a customer's subscription",
+    create_ticket: "Open a support ticket for follow-up",
+    lookup_invoice: "Find invoices and charges for an account"
+  };
+
+  // Illustrative only. Score weights follow TOOLS order and are normalized.
   var TASKS = [
     {
       text: "Refund the customer's most recent order",
       target: "issue_refund",
       misses: ["send_email", "create_ticket"],
-      before: [16, 15, 12, 14, 9, 11, 12, 11],
-      after: [14, 71, 2, 4, 1, 1, 1, 6]
+      scores: [14, 71, 2, 4, 1, 1, 1, 6]
     },
     {
       text: "Cancel my plan and confirm by email",
       target: "cancel_subscription",
       misses: ["lookup_invoice", "issue_refund"],
-      before: [10, 12, 14, 15, 8, 13, 13, 15],
-      after: [2, 3, 18, 6, 1, 66, 1, 3]
+      scores: [2, 3, 18, 6, 1, 66, 1, 3]
     },
     {
       text: "Ship my order to my new address instead",
       target: "update_address",
       misses: ["create_ticket"],
-      before: [15, 9, 12, 16, 13, 10, 14, 11],
-      after: [12, 1, 2, 7, 74, 1, 2, 1]
+      scores: [12, 1, 2, 7, 74, 1, 2, 1]
     },
     {
       text: "Why was I charged twice this month?",
       target: "lookup_invoice",
       misses: ["issue_refund", "search_orders"],
-      before: [14, 15, 10, 13, 8, 12, 13, 15],
-      after: [6, 9, 2, 8, 1, 1, 13, 60]
+      scores: [6, 9, 2, 8, 1, 1, 13, 60]
     }
   ];
 
   var TIMING = {
     type: 28,
-    settle: 450,
-    hops: 7,
-    hopStart: 55,
-    hopGrowth: 1.28,
-    betweenCalls: 260,
-    sharpen: 650,
-    reorder: 700,
-    hold: 2800,
+    settle: 400,
+    read: 90,
+    reread: 55,
+    hops: 5,
+    hopStart: 70,
+    hopGrowth: 1.3,
+    call: 360,
+    score: 550,
+    reorder: 650,
+    hold: 3000,
     fade: 380
   };
   var BAR_SCALE = 0.75;
@@ -76,14 +85,8 @@
     return TOOLS.slice().sort(function (a, b) { return probs[b] - probs[a]; });
   }
 
-  function pickWeighted(names, probs) {
-    var total = names.reduce(function (sum, n) { return sum + probs[n]; }, 0);
-    var r = Math.random() * total;
-    for (var i = 0; i < names.length; i++) {
-      r -= probs[names[i]];
-      if (r <= 0) return names[i];
-    }
-    return names[names.length - 1];
+  function pickRandom(names) {
+    return names[Math.floor(Math.random() * names.length)];
   }
 
   function buildColumn(el) {
@@ -101,6 +104,7 @@
     return {
       list: list,
       rows: rows,
+      log: el.querySelector("[data-log]"),
       trail: el.querySelector("[data-trail]"),
       status: el.querySelector("[data-status]"),
       order: TOOLS
@@ -127,12 +131,12 @@
     }
   }
 
-  function setDist(col, probs) {
+  function setScores(col, probs) {
     TOOLS.forEach(function (name) {
       var row = col.rows[name];
-      var width = Math.min(probs[name] / BAR_SCALE, 1) * 100;
+      var width = probs ? Math.min(probs[name] / BAR_SCALE, 1) * 100 : 0;
       row.querySelector(".bar").style.width = width + "%";
-      row.querySelector(".p").textContent = probs[name].toFixed(2);
+      row.querySelector(".p").textContent = probs ? probs[name].toFixed(2) : "";
     });
   }
 
@@ -140,6 +144,18 @@
     col.status.textContent = text;
     col.status.classList.toggle("good", tone === "good");
     col.status.classList.toggle("bad", tone === "bad");
+  }
+
+  function setLog(col, name, text) {
+    col.log.textContent = "";
+    if (name) {
+      var strong = document.createElement("span");
+      strong.className = "log-name";
+      strong.textContent = name;
+      col.log.appendChild(strong);
+      col.log.appendChild(document.createTextNode(": "));
+    }
+    col.log.appendChild(document.createTextNode(text || ""));
   }
 
   function probe(col, name) {
@@ -160,24 +176,13 @@
   function reset(col) {
     col.list.classList.remove("shown");
     col.trail.textContent = "";
+    setLog(col, null, "");
     setStatus(col, "", null);
     TOOLS.forEach(function (name) {
       var row = col.rows[name];
       row.classList.remove("probe", "hit", "miss");
       row.querySelector(".mark").textContent = "";
     });
-  }
-
-  // Flicker across candidates in proportion to their probability, then land on `landOn`.
-  async function sample(col, candidates, probs, landOn, hops) {
-    var delay = TIMING.hopStart;
-    for (var i = 0; i < hops; i++) {
-      probe(col, pickWeighted(candidates, probs));
-      await wait(delay);
-      delay *= TIMING.hopGrowth;
-    }
-    probe(col, landOn);
-    await wait(delay);
   }
 
   function typeText(text) {
@@ -196,53 +201,83 @@
     return n === 1 ? "right on call 1" : n + " calls to get it right";
   }
 
-  async function playBefore(task, probs) {
+  // Walk the list one tool at a time, the way a model reads descriptions in its prompt.
+  async function readTools(col, candidates, pace) {
+    for (var i = 0; i < candidates.length; i++) {
+      probe(col, candidates[i]);
+      setLog(col, candidates[i], DESCRIPTIONS[candidates[i]]);
+      await wait(pace);
+    }
+  }
+
+  // Waver between a few options before committing to `landOn`.
+  async function deliberate(col, candidates, landOn) {
+    var delay = TIMING.hopStart;
+    for (var i = 0; i < TIMING.hops; i++) {
+      probe(col, pickRandom(candidates));
+      await wait(delay);
+      delay *= TIMING.hopGrowth;
+    }
+    probe(col, landOn);
+    await wait(delay);
+  }
+
+  async function playBefore(task) {
     var col = cols.before;
     var sequence = task.misses.concat([task.target]);
     var tried = [];
-    setStatus(col, "sampling", null);
     for (var i = 0; i < sequence.length; i++) {
+      var pick = sequence[i];
       var candidates = TOOLS.filter(function (n) { return tried.indexOf(n) === -1; });
-      await sample(col, candidates, probs, sequence[i], TIMING.hops);
-      markCall(col, sequence[i], sequence[i] === task.target);
-      tried.push(sequence[i]);
-      await wait(TIMING.betweenCalls);
+      setStatus(col, i === 0 ? "reading descriptions" : "re-reading", null);
+      await readTools(col, candidates, i === 0 ? TIMING.read : TIMING.reread);
+      setStatus(col, "deciding", null);
+      setLog(col, null, "thinking about which tool fits...");
+      await deliberate(col, candidates, pick);
+      setStatus(col, "calling " + pick, null);
+      setLog(col, null, "calling " + pick + "()");
+      await wait(TIMING.call);
+      var isHit = pick === task.target;
+      markCall(col, pick, isHit);
+      setLog(col, null, isHit ? "done" : "wrong tool, back to the list");
+      tried.push(pick);
+      await wait(TIMING.call);
     }
-    setStatus(col, callsLabel(sequence.length), sequence.length > 1 ? "bad" : "good");
+    setStatus(col, callsLabel(sequence.length), "bad");
   }
 
-  async function playAfter(task, probs) {
+  async function playAfter(task) {
     var col = cols.after;
-    setStatus(col, "ranking", null);
-    await wait(TIMING.settle);
-    setDist(col, probs);
-    await wait(TIMING.sharpen);
-    var order = sortedBy(probs);
+    var scores = normalize(task.scores);
+    setStatus(col, "scoring", null);
+    setLog(col, null, "scoring all " + TOOLS.length + " tools against the task");
+    setScores(col, scores);
+    await wait(TIMING.score);
+    var order = sortedBy(scores);
     place(col, order, false);
     await wait(TIMING.reorder);
-    setStatus(col, "sampling", null);
-    await sample(col, order.slice(0, 3), probs, task.target, 3);
+    probe(col, task.target);
+    setStatus(col, "calling " + task.target, null);
+    setLog(col, null, "calling " + task.target + "()");
+    await wait(TIMING.call);
     markCall(col, task.target, true);
+    setLog(col, null, "done");
     setStatus(col, callsLabel(1), "good");
   }
 
   async function play(task) {
-    var before = normalize(task.before);
-    var after = normalize(task.after);
-
     reset(cols.before);
     reset(cols.after);
     place(cols.before, TOOLS, true);
     place(cols.after, TOOLS, true);
-    setDist(cols.before, before);
-    setDist(cols.after, before);
+    setScores(cols.after, null);
 
     await typeText(task.text);
     cols.before.list.classList.add("shown");
     cols.after.list.classList.add("shown");
     await wait(TIMING.settle);
 
-    await Promise.all([playBefore(task, before), playAfter(task, after)]);
+    await Promise.all([playBefore(task), playAfter(task)]);
     await wait(TIMING.hold);
 
     cols.before.list.classList.remove("shown");
@@ -252,18 +287,16 @@
 
   // Reduced motion: show each finished comparison without animating.
   function showStatic(task) {
-    var before = normalize(task.before);
-    var after = normalize(task.after);
+    var scores = normalize(task.scores);
     var sequence = task.misses.concat([task.target]);
     reset(cols.before);
     reset(cols.after);
     taskText.textContent = task.text;
     place(cols.before, TOOLS, true);
-    setDist(cols.before, before);
     sequence.forEach(function (n) { markCall(cols.before, n, n === task.target); });
     setStatus(cols.before, callsLabel(sequence.length), "bad");
-    place(cols.after, sortedBy(after), true);
-    setDist(cols.after, after);
+    place(cols.after, sortedBy(scores), true);
+    setScores(cols.after, scores);
     markCall(cols.after, task.target, true);
     setStatus(cols.after, callsLabel(1), "good");
     cols.before.list.classList.add("shown");
