@@ -103,12 +103,68 @@ h1 em, h2 em { color: var(--accent); }
 .text-link:hover { color: var(--ink); }
 .etymology { margin: 56px 0 0; font-size: 16px; color: var(--muted); max-width: 480px; }
 
-.hero-art { width: 100%; max-width: 440px; justify-self: end; color: var(--ink); }
-.hero-art .draw { stroke-dasharray: 400; stroke-dashoffset: 400; animation: draw 1.6s var(--ease) forwards; }
-.hero-art .draw-accent { animation-delay: 0.6s; }
-.hero-art .star { opacity: 0; animation: appear 0.6s ease 1.6s forwards; }
-@keyframes draw { to { stroke-dashoffset: 0; } }
+.hero-mark { width: 100%; max-width: 380px; justify-self: center; color: var(--ink); overflow: visible; }
+
+/* Logo geometry. Base styles are the finished mark; .build animates its construction. */
+.b-arc, .b-ray-c, .b-guide { stroke-dasharray: 1 2; stroke-dashoffset: 0; }
+.b-ray-l, .b-ray-r, .b-origin, .b-tracer, .b-star, .b-ring { transform-box: view-box; }
+.b-ray-l, .b-ray-r, .b-origin { transform-origin: 16px 27px; }
+.b-ray-l { transform: rotate(-34.4deg); }
+.b-ray-r { transform: rotate(34.4deg); }
+.b-star, .b-ring { transform-origin: 16px 10px; }
+.b-tracer { transform-origin: 16px 21px; opacity: 0; }
+.b-guide, .b-ring { opacity: 0; }
+
 @keyframes appear { to { opacity: 1; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .build .b-origin { animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both; }
+  .build .b-guide { animation: guide 2.9s var(--ease) 0.25s both; }
+  .build .b-guide-2 { animation-delay: 0.45s; }
+  .build .b-arc { animation: draw 0.9s var(--ease) 0.7s both; }
+  .build .b-tracer { animation: trace 0.9s var(--ease) 0.7s both; }
+  .build .b-ray-l { animation: spin-l 0.9s cubic-bezier(0.34, 1.4, 0.64, 1) 1.35s both; }
+  .build .b-ray-r { animation: spin-r 0.9s cubic-bezier(0.34, 1.4, 0.64, 1) 1.35s both; }
+  .build .b-ray-c { animation: draw 0.55s var(--ease) 1.85s both; }
+  .build .b-star { animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.3s both; }
+  .build .b-ring { animation: ring 1.2s ease-out 2.4s forwards; }
+}
+
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes guide {
+  0% { stroke-dashoffset: 1; opacity: 1; }
+  30% { stroke-dashoffset: 0; opacity: 1; }
+  80% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes trace {
+  0% { transform: rotate(0deg); opacity: 1; }
+  92% { transform: rotate(180deg); opacity: 1; }
+  100% { transform: rotate(180deg); opacity: 0; }
+}
+@keyframes spin-l {
+  from { transform: rotate(-90deg); opacity: 0; }
+  20% { opacity: 1; }
+  to { transform: rotate(-34.4deg); opacity: 1; }
+}
+@keyframes spin-r {
+  from { transform: rotate(90deg); opacity: 0; }
+  20% { opacity: 1; }
+  to { transform: rotate(34.4deg); opacity: 1; }
+}
+@keyframes ring {
+  from { transform: scale(1); opacity: 0.7; }
+  to { transform: scale(3.2); opacity: 0; }
+}
+
+/* Subpages */
+.page-head { padding-top: 72px; padding-bottom: 24px; max-width: 1080px; }
+.page-head .sub { max-width: 600px; }
+.section-tight { padding-top: 24px; }
+.more { margin: 0; padding-left: 252px; }
+.nav a[aria-current="page"] { color: var(--ink); }
+.footer-nav { display: flex; gap: 24px; flex-wrap: wrap; }
 
 /* Sections */
 .section {
@@ -279,6 +335,7 @@ h3 { font-size: 22px; font-weight: 500; line-height: 1.25; }
 
 /* FAQ */
 .faq { padding-left: 252px; border-top: 1px solid var(--rule); }
+.section-tight .faq { padding-left: 0; max-width: 760px; }
 .faq details { border-bottom: 1px solid var(--rule); }
 .faq summary {
   cursor: pointer;
@@ -326,7 +383,8 @@ h3 { font-size: 22px; font-weight: 500; line-height: 1.25; }
   .points, .how, .uses, .faq { padding-left: 0; }
   .section-head { grid-template-columns: 1fr; gap: 12px; }
   .hero { grid-template-columns: 1fr; }
-  .hero-art { display: none; }
+  .hero-mark { max-width: 240px; justify-self: start; order: -1; margin-bottom: 8px; }
+  .more { padding-left: 0; }
 }
 
 @media (max-width: 720px) {
@@ -351,6 +409,5 @@ h3 { font-size: 22px; font-weight: 500; line-height: 1.25; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .hero-art .draw { stroke-dashoffset: 0; }
-  .hero-art .star, .chip { opacity: 1; }
+  .chip { opacity: 1; }
 }

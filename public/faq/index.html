@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FAQ · Aethis Labs</title>
+  <meta name="description" content="Common questions about ActionRank by Aethis Labs.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header wrap">
+    <a class="brand" href="/" aria-label="Aethis Labs home">
+      <svg class="logo" viewBox="0 0 32 32" fill="none" stroke-linecap="round" aria-hidden="true">
+        <path class="b-arc" d="M5 21 A11 11 0 0 1 27 21" stroke="currentColor" stroke-width="1.4" pathLength="1"/>
+        <g opacity=".35" stroke="currentColor" stroke-width="1.4">
+          <line class="b-ray-l" x1="16" y1="27" x2="16" y2="15.5"/>
+          <line class="b-ray-r" x1="16" y1="27" x2="16" y2="15.5"/>
+        </g>
+        <line class="b-ray-c" x1="16" y1="27" x2="16" y2="12.5" stroke="var(--accent)" stroke-width="1.6" pathLength="1"/>
+        <circle class="b-star" cx="16" cy="10" r="2.4" fill="var(--accent)"/>
+        <circle class="b-origin" cx="16" cy="27" r="1.4" fill="currentColor"/>
+      </svg>
+      <span>Aethis Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/how-it-works/">How it works</a>
+      <a href="/faq/" aria-current="page">FAQ</a>
+      <a class="nav-cta" href="mailto:yash@aethislabs.com?subject=ActionRank%20access">Request access</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-head wrap">
+      <p class="eyebrow">FAQ</p>
+      <h1>Before you <em>ask.</em></h1>
+    </section>
+
+    <section class="section section-tight wrap" aria-label="Questions">
+      <div class="faq">
+        <details open>
+          <summary>What is ActionRank?</summary>
+          <p>An API that ranks an AI agent's tools for a given task, so the agent calls the right one first.</p>
+        </details>
+        <details>
+          <summary>Does ActionRank call my tools?</summary>
+          <p>No. It returns an order. Your agent still decides and makes every call itself.</p>
+        </details>
+        <details>
+          <summary>What do I send it?</summary>
+          <p>The task your agent is working on and the tools it has available, with their names and descriptions.</p>
+        </details>
+        <details>
+          <summary>Do I need to change how my agent is built?</summary>
+          <p>It is designed as a single step before tool selection, so it sits alongside whatever you already use.</p>
+        </details>
+        <details>
+          <summary>Where does the name come from?</summary>
+          <p>"Aethis" comes from aether, the invisible layer the Greeks believed everything moved through. The mark is a sky dome with three paths from one point. Only one reaches the light.</p>
+        </details>
+        <details>
+          <summary>How do I get access?</summary>
+          <p>Access is by request. Email <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a> with a line about your agent.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="closing wrap">
+      <h2>Still curious?</h2>
+      <a class="button" href="mailto:yash@aethislabs.com?subject=ActionRank%20question">Ask a question</a>
+      <p class="contact">For inquiries, email <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer wrap">
+    <span class="footer-brand">
+      <svg class="logo" viewBox="0 0 32 32" fill="none" stroke-linecap="round" aria-hidden="true">
+        <path d="M5 21 A11 11 0 0 1 27 21" stroke="currentColor" stroke-width="1.6"/>
+        <line x1="16" y1="27" x2="16" y2="12.5" stroke="var(--accent)" stroke-width="1.8"/>
+        <circle cx="16" cy="10" r="2.4" fill="var(--accent)"/>
+        <circle cx="16" cy="27" r="1.4" fill="currentColor"/>
+      </svg>
+      Aethis Labs
+    </span>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="/how-it-works/">How it works</a>
+      <a href="/faq/">FAQ</a>
+      <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a>
+    </nav>
+    <span>&copy; <span id="year">2026</span> Aethis Labs</span>
+  </footer>
+
+  <script src="/main.js"></script>
+</body>
+</html>
