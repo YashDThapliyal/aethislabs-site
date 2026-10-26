@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aethis Labs</title>
+  <meta name="description" content="Aethis Labs makes ActionRank, an API that ranks an AI agent's tools for a given task so it calls the right one first.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Aethis Labs home">
+      <svg class="logo" viewBox="0 0 32 32" fill="none" stroke-linecap="round" aria-hidden="true">
+        <path d="M5 21 A11 11 0 0 1 27 21" stroke="currentColor" stroke-width="1.4"/>
+        <line x1="16" y1="27" x2="9.5" y2="17.5" stroke="currentColor" stroke-width="1.4" opacity=".35"/>
+        <line x1="16" y1="27" x2="22.5" y2="17.5" stroke="currentColor" stroke-width="1.4" opacity=".35"/>
+        <line x1="16" y1="27" x2="16" y2="12.5" stroke="var(--accent)" stroke-width="1.6"/>
+        <circle cx="16" cy="10" r="2.4" fill="var(--accent)"/>
+        <circle cx="16" cy="27" r="1.4" fill="currentColor"/>
+      </svg>
+      <span>Aethis Labs</span>
+    </a>
+    <a class="header-link" href="mailto:yash@aethislabs.com?subject=ActionRank%20access">Request access</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">ActionRank</p>
+      <h1>Aethis Labs helps AI agents pick the right tool, every time.</h1>
+      <p class="sub">Aethis ranks your agent's tools so it calls the right one first.</p>
+      <a class="button" href="mailto:yash@aethislabs.com?subject=ActionRank%20access">Request access</a>
+      <p class="etymology"><em>"Aethis"</em> comes from aether, the invisible layer the Greeks believed everything moved through.</p>
+    </section>
+
+    <section class="demo" aria-label="ActionRank demo">
+      <div class="demo-frame">
+        <div class="demo-bar">
+          <span>actionrank</span>
+          <span class="demo-status" id="demo-status">ranking</span>
+        </div>
+        <div class="demo-task">
+          <span class="demo-label">task</span>
+          <span class="demo-text" id="task-text"></span><span class="caret" aria-hidden="true"></span>
+        </div>
+        <ol class="demo-tools" id="tool-list"></ol>
+      </div>
+      <p class="demo-note">Illustrative example.</p>
+    </section>
+
+    <section class="points">
+      <div class="point">
+        <span class="num">01</span>
+        <h2>Fewer wrong calls</h2>
+        <p>A wrong first call costs a round trip, tokens, and sometimes a side effect you then have to undo.</p>
+      </div>
+      <div class="point">
+        <span class="num">02</span>
+        <h2>Grows with your toolset</h2>
+        <p>The more tools an agent has, the harder it is to choose well from the full list. A ranking keeps the choice focused.</p>
+      </div>
+      <div class="point">
+        <span class="num">03</span>
+        <h2>Fits any agent</h2>
+        <p>Send the task and your tools. Get them back in the order your agent should try them.</p>
+      </div>
+    </section>
+
+    <section class="contact">
+      <p>For inquiries, email <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a>
+    <span>&copy; <span id="year">2026</span> Aethis Labs</span>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
