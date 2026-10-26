@@ -160,15 +160,16 @@ figcaption .sc { color: var(--ink); }
 .code pre { margin: 0 0 1rem; line-height: 1.6; white-space: pre; overflow-x: auto; }
 .code .k { font-weight: 600; }
 .code .f { color: var(--gray); }
-.resp { list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 0.72rem; line-height: 1.6; max-width: 24rem; }
-.resp li { display: grid; grid-template-columns: 1.6em 1fr auto; }
-.resp .r { color: var(--light); }
-.resp .p { font-variant-numeric: tabular-nums; }
-.resp li:first-child .n { text-decoration: underline; text-underline-offset: 0.2em; }
+.resp { border-collapse: collapse; font-family: var(--mono); font-size: 0.72rem; line-height: 1.6; width: 100%; max-width: 24rem; }
+.resp thead th { font-weight: 400; color: var(--light); text-align: left; padding: 0 0 0.1rem; }
+.resp td { padding: 0; vertical-align: baseline; }
+.resp .r, .resp th:first-child { width: 3.4em; color: var(--light); }
+.resp .p, .resp th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.resp tbody tr:first-child .n { text-decoration: underline; text-underline-offset: 0.2em; }
 .latency { margin: 0.6rem 0 0; font-family: var(--mono); font-size: 0.66rem; color: var(--gray); }
 
-.reveal .resp li { opacity: 0; transform: translateY(3px); transition: opacity 0.5s ease, transform 0.5s ease; }
-.reveal.in .resp li { opacity: 1; transform: none; }
+.reveal .resp tbody tr { opacity: 0; transform: translateY(3px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.reveal.in .resp tbody tr { opacity: 1; transform: none; }
 
 /* Results table, booktabs style */
 .booktabs {
@@ -193,12 +194,13 @@ figcaption .sc { color: var(--ink); }
 /* Colophon */
 .colophon { margin-top: 3.4rem; padding-top: 0.8rem; border-top: 1px solid var(--ink); font-size: 0.8rem; color: var(--gray); }
 .name-note { margin: 0 0 0.8rem; }
+.founder { margin: 0 0 0.3rem; }
 .name-note .sc { color: var(--ink); }
 .foot-line { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; margin: 0; }
 
 /* Narrow screens: sidenotes drop into the text column. */
 /* Below this width there is no room for the margin, so sidenotes drop into the text column. */
-@media (max-width: 1300px) {
+@media (max-width: 1400px) {
   .sidenote {
     float: none;
     display: block;

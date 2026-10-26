@@ -14,7 +14,7 @@
 
   var fig1 = document.getElementById("fig1");
   if (fig1 && !reduceMotion.matches && "IntersectionObserver" in window) {
-    var rows = fig1.querySelectorAll(".resp li");
+    var rows = fig1.querySelectorAll(".resp tbody tr");
     rows.forEach(function (li, i) { li.style.transitionDelay = i * 70 + "ms"; });
     fig1.classList.add("reveal");
     var io = new IntersectionObserver(function (entries) {
@@ -60,10 +60,11 @@
   var rowEls = {};
   HELM.forEach(function (t) {
     var li = document.createElement("li");
-    li.innerHTML = '<span class="r"></span><span class="nm"></span><span class="bar"></span><span class="p"></span>';
+    li.innerHTML = '<span class="r"></span> <span class="nm"></span> <span class="bar"></span> <span class="p"></span>';
     li.querySelector(".nm").textContent = t.name;
     li.querySelector(".p").textContent = t.prob.toFixed(3);
     helmRows.appendChild(li);
+    helmRows.appendChild(document.createTextNode(" "));
     rowEls[t.name] = li;
   });
   var maxProb = Math.max.apply(null, HELM.map(function (t) { return t.prob; }));
@@ -116,10 +117,12 @@
     var name = document.createElement("span");
     name.textContent = text;
     li.appendChild(label);
+    li.appendChild(document.createTextNode(" "));
     li.appendChild(name);
-    Array.prototype.forEach.call(steps.children, function (prev) { prev.lastChild.classList.add("done"); });
+    Array.prototype.forEach.call(steps.children, function (prev) { prev.lastElementChild.classList.add("done"); });
     steps.appendChild(li);
-    if (isLast) li.lastChild.classList.remove("done");
+    steps.appendChild(document.createTextNode(" "));
+    if (isLast) li.lastElementChild.classList.remove("done");
   }
 
   function setVerdict(name) {
