@@ -1,6 +1,6 @@
 # aethislabs-site
 
-Landing page for Aethis Labs (aethislabs.com). Plain HTML, CSS, and JS with no build step.
+Homepage for Aethis Labs (aethislabs.com) and Aethis Helm. Plain HTML, CSS, and JS with no build step.
 
 - `public/` is the site that gets deployed.
 - `design/logo-options.html` shows the three logo concepts.

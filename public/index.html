@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aethis Labs</title>
-  <meta name="description" content="Aethis Labs makes ActionRank, an API that ranks an AI agent's tools for a given task so it calls the right one first.">
+  <meta name="description" content="Aethis Helm ranks an AI agent's tools for its next step. One read of the task and tools scores every option. No generation, no hallucinated tool names.">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,24 +27,17 @@
       </svg>
       <span>Aethis Labs</span>
     </a>
-    <nav class="nav" aria-label="Primary">
-      <a href="/how-it-works/">How it works</a>
-      <a href="/faq/">FAQ</a>
-      <a class="nav-cta" href="mailto:yash@aethislabs.com?subject=ActionRank%20access">Request access</a>
-    </nav>
+    <a class="nav-cta" href="mailto:yash@aethislabs.com?subject=Aethis%20Helm%20access">Request access</a>
   </header>
 
   <main>
     <section class="hero wrap">
       <div class="hero-copy">
-        <p class="eyebrow">ActionRank, by Aethis Labs</p>
-        <h1>Aethis Labs helps AI agents pick the right tool, <em>every time.</em></h1>
-        <p class="sub">Aethis ranks your agent's tools so it calls the right one first.</p>
-        <div class="actions">
-          <a class="button" href="mailto:yash@aethislabs.com?subject=ActionRank%20access">Request access</a>
-          <a class="text-link" href="#demo">See the difference &darr;</a>
-        </div>
-        <p class="etymology"><em>"Aethis"</em> comes from aether, the invisible layer the Greeks believed everything moved through.</p>
+        <p class="eyebrow">Aethis Helm</p>
+        <h1>Helm picks your agent's next tool. <em>Faster, and never one that doesn't exist.</em></h1>
+        <p class="sub">A single read of the task and tools scores every option at once. No generation, no hallucinated tool names.</p>
+        <a class="button" href="mailto:yash@aethislabs.com?subject=Aethis%20Helm%20access">Request access</a>
+        <p class="etymology">"Aethis" comes from aether, the invisible layer the Greeks believed everything moved through. A helm is what you steer with.</p>
       </div>
 
       <svg class="hero-mark build" viewBox="2 5 28 25" fill="none" stroke-linecap="round" aria-hidden="true">
@@ -66,97 +60,91 @@
       </svg>
     </section>
 
-    <section class="section wrap" id="demo" aria-labelledby="demo-title">
-      <div class="section-head">
-        <p class="section-label">The difference</p>
-        <h2 id="demo-title">Same agent, same tools. <em>A better first guess.</em></h2>
-      </div>
-
+    <section class="demo-section wrap" aria-label="Aethis Helm demo">
       <div class="demo">
-        <div class="demo-task">
-          <span class="demo-label">task</span>
-          <span class="demo-text" id="task-text"></span><span class="caret" aria-hidden="true"></span>
+        <div class="demo-bar">
+          <span>helm</span>
+          <span class="demo-status" id="demo-status"></span>
         </div>
-        <div class="demo-cols">
-          <div class="col col-reading" id="col-before">
-            <div class="col-head">
-              <div>
-                <p class="col-title">Agent on its own</p>
-                <p class="col-sub">reads every description, then guesses</p>
-              </div>
-              <span class="col-status" data-status></span>
-            </div>
-            <p class="dist-label">tools</p>
-            <ol class="rows" data-rows></ol>
-            <p class="log" data-log aria-hidden="true"></p>
-            <div class="trail" data-trail></div>
-          </div>
-          <div class="col col-after" id="col-after">
-            <div class="col-head">
-              <div>
-                <p class="col-title">With ActionRank</p>
-                <p class="col-sub">scores every tool in one pass</p>
-              </div>
-              <span class="col-status" data-status></span>
-            </div>
-            <p class="dist-label">score</p>
-            <ol class="rows" data-rows></ol>
-            <p class="log" data-log aria-hidden="true"></p>
-            <div class="trail" data-trail></div>
-          </div>
+        <div class="demo-field">
+          <span class="field-label">task</span>
+          <span class="field-value"><span id="task-text"></span><span class="caret" aria-hidden="true"></span></span>
         </div>
+        <div class="demo-field">
+          <span class="field-label">prior calls</span>
+          <span class="field-value prior" id="prior-calls"></span>
+        </div>
+        <ol class="rows" id="tool-list"></ol>
       </div>
-      <p class="note">Illustrative example. Scores and calls are for demonstration only.</p>
+      <p class="note">Illustrative example.</p>
     </section>
 
-    <section class="section wrap" aria-labelledby="why-title">
+    <section class="api wrap" aria-labelledby="api-title">
       <div class="section-head">
-        <p class="section-label">Why it matters</p>
-        <h2 id="why-title">Every wrong call is paid for.</h2>
+        <p class="section-label">API</p>
+        <h2 id="api-title">One request. Every tool scored.</h2>
+      </div>
+      <div class="code-pair">
+        <figure class="code">
+          <figcaption>Request</figcaption>
+<pre><code><span class="k">POST</span> /rank
+
+{
+  <span class="p">"task"</span>: <span class="s">"Refund the customer's most recent order"</span>,
+  <span class="p">"tools"</span>: [
+    { <span class="p">"name"</span>: <span class="s">"search_orders"</span>, <span class="p">"description"</span>: <span class="s">"Find orders"</span> },
+    { <span class="p">"name"</span>: <span class="s">"issue_refund"</span>, <span class="p">"description"</span>: <span class="s">"Refund a payment"</span> },
+    { <span class="p">"name"</span>: <span class="s">"Finish"</span>, <span class="p">"description"</span>: <span class="s">"End the task"</span> }
+  ]
+}</code></pre>
+        </figure>
+        <figure class="code">
+          <figcaption>Response</figcaption>
+<pre><code>{
+  <span class="p">"ranked"</span>: [
+    { <span class="p">"name"</span>: <span class="s">"search_orders"</span>, <span class="p">"score"</span>: <span class="n">2.31</span>, <span class="p">"prob"</span>: <span class="n">0.62</span> },
+    { <span class="p">"name"</span>: <span class="s">"issue_refund"</span>, <span class="p">"score"</span>: <span class="n">1.23</span>, <span class="p">"prob"</span>: <span class="n">0.21</span> },
+    { <span class="p">"name"</span>: <span class="s">"Finish"</span>, <span class="p">"score"</span>: <span class="n">0.38</span>, <span class="p">"prob"</span>: <span class="n">0.09</span> }
+  ]
+}</code></pre>
+        </figure>
+      </div>
+      <p class="note">Example values.</p>
+    </section>
+
+    <section class="results wrap" aria-labelledby="results-title">
+      <div class="section-head">
+        <p class="section-label">Results</p>
+        <h2 id="results-title">Measured, not promised.</h2>
       </div>
       <div class="points">
         <div class="point">
-          <span class="num">01</span>
-          <h3>Fewer wrong calls</h3>
-          <p>A wrong first call costs a round trip, tokens, and sometimes a side effect you then have to undo.</p>
+          <h3>Never invents a tool</h3>
+          <p class="figure">0%</p>
+          <p>invented tool names, vs 0.9% for the usual generate-the-name approach.</p>
         </div>
         <div class="point">
-          <span class="num">02</span>
-          <h3>Grows with your toolset</h3>
-          <p>The more tools an agent has, the harder it is to choose well from the full list. A ranking keeps the choice focused.</p>
+          <h3>The right tool, close at hand</h3>
+          <p class="figure">97.5%</p>
+          <p>of the time the correct tool is in the top 5, vs 90.7%.</p>
         </div>
         <div class="point">
-          <span class="num">03</span>
-          <h3>Fits any agent</h3>
-          <p>Send the task and your tools. Get them back in the order your agent should try them.</p>
+          <h3>About 2.5x faster</h3>
+          <p class="figure">247 ms</p>
+          <p>per decision vs 632 ms on a laptop.</p>
         </div>
       </div>
-      <p class="more"><a class="text-link" href="/how-it-works/">How it works &rarr;</a></p>
+      <p class="caption">Research results on ToolBench with Qwen2.5-1.5B across 3 runs. Top-1 accuracy is on par with the baseline (64.0% vs 66.6%).</p>
     </section>
 
-    <section class="closing wrap">
-      <h2>Give your agent a better first guess.</h2>
-      <a class="button" href="mailto:yash@aethislabs.com?subject=ActionRank%20access">Request access</a>
-      <p class="contact">For inquiries, email <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a></p>
+    <section class="contact wrap">
+      <p>For inquiries, email <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a></p>
     </section>
   </main>
 
   <footer class="site-footer wrap">
-    <span class="footer-brand">
-      <svg class="logo" viewBox="0 0 32 32" fill="none" stroke-linecap="round" aria-hidden="true">
-        <path d="M5 21 A11 11 0 0 1 27 21" stroke="currentColor" stroke-width="1.6"/>
-        <line x1="16" y1="27" x2="16" y2="12.5" stroke="var(--accent)" stroke-width="1.8"/>
-        <circle cx="16" cy="10" r="2.4" fill="var(--accent)"/>
-        <circle cx="16" cy="27" r="1.4" fill="currentColor"/>
-      </svg>
-      Aethis Labs
-    </span>
-    <nav class="footer-nav" aria-label="Footer">
-      <a href="/how-it-works/">How it works</a>
-      <a href="/faq/">FAQ</a>
-      <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a>
-    </nav>
     <span>&copy; <span id="year">2026</span> Aethis Labs</span>
+    <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a>
   </footer>
 
   <script src="/main.js"></script>
