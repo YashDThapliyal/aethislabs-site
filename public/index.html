@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Aethis Labs</title>
-  <meta name="description" content="Aethis Helm ranks an AI agent's tools for its next step. One read of the task and tools scores every option. No generation, no hallucinated tool names.">
-  <meta name="color-scheme" content="light dark">
+  <title>Helm: choosing an agent's next tool without generating text · Aethis Labs</title>
+  <meta name="description" content="Helm reads the task, the calls made so far, and the available tools once, and scores every tool. Because it never writes text, it cannot call a tool that doesn't exist.">
+  <meta name="color-scheme" content="light">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,120 +13,174 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header class="site-header wrap">
-    <a class="brand" href="/" aria-label="Aethis Labs home">
-      <svg class="logo build" viewBox="0 0 32 32" fill="none" stroke-linecap="round" aria-hidden="true">
-        <path class="b-arc" d="M5 21 A11 11 0 0 1 27 21" stroke="currentColor" stroke-width="1.4" pathLength="1"/>
-        <g opacity=".35" stroke="currentColor" stroke-width="1.4">
-          <line class="b-ray-l" x1="16" y1="27" x2="16" y2="15.5"/>
-          <line class="b-ray-r" x1="16" y1="27" x2="16" y2="15.5"/>
-        </g>
-        <line class="b-ray-c" x1="16" y1="27" x2="16" y2="12.5" stroke="var(--accent)" stroke-width="1.6" pathLength="1"/>
-        <circle class="b-star" cx="16" cy="10" r="2.4" fill="var(--accent)"/>
-        <circle class="b-origin" cx="16" cy="27" r="1.4" fill="currentColor"/>
-      </svg>
-      <span>Aethis Labs</span>
-    </a>
-    <a class="nav-cta" href="mailto:yash@aethislabs.com?subject=Aethis%20Helm%20access">Request access</a>
-  </header>
+  <div class="page">
+    <header class="masthead">
+      <a class="brand" href="/" aria-label="Aethis Labs home">
+        <svg class="logo" viewBox="0 0 32 32" fill="none" stroke-linecap="round" aria-hidden="true">
+          <path d="M5 21 A11 11 0 0 1 27 21" stroke="currentColor" stroke-width="1.4"/>
+          <line x1="16" y1="27" x2="9.5" y2="17.5" stroke="currentColor" stroke-width="1.4" opacity=".35"/>
+          <line x1="16" y1="27" x2="22.5" y2="17.5" stroke="currentColor" stroke-width="1.4" opacity=".35"/>
+          <line x1="16" y1="27" x2="16" y2="12.5" stroke="#2f4a7a" stroke-width="1.6"/>
+          <circle cx="16" cy="10" r="2.4" fill="#2f4a7a"/>
+          <circle cx="16" cy="27" r="1.4" fill="currentColor"/>
+        </svg>
+        <span class="sc">Aethis Labs</span>
+      </a>
+      <p class="dateline sc">Note 001 &middot; October 2026</p>
+    </header>
 
-  <main>
-    <section class="hero wrap">
-      <p class="eyebrow">Aethis Helm</p>
-      <h1>Helm picks your agent's next tool. <em>Faster, and never one that doesn't exist.</em></h1>
-      <p class="sub">A single read of the task and tools scores every option at once. No generation, no hallucinated tool names.</p>
-      <a class="button" href="mailto:yash@aethislabs.com?subject=Aethis%20Helm%20access">Request access</a>
-    </section>
+    <article>
+      <h1>Helm: choosing an agent's next tool without generating text</h1>
 
-    <section class="sky" aria-label="Aethis Helm demo">
-      <svg class="dome" id="dome" viewBox="0 0 1000 500" fill="none" stroke-linecap="round" aria-hidden="true">
-        <g class="sky-lines">
-          <line class="sky-draw" x1="60" y1="470" x2="940" y2="470" pathLength="1"/>
-          <path class="sky-draw sky-faint" d="M360 470 A140 140 0 0 1 640 470" pathLength="1"/>
-          <path class="sky-draw sky-faint" d="M250 470 A250 250 0 0 1 750 470" pathLength="1"/>
-          <path class="sky-draw sky-main" d="M140 470 A360 360 0 0 1 860 470" pathLength="1"/>
-        </g>
-        <g id="rays"></g>
-        <line class="needle" id="needle" x1="500" y1="470" x2="500" y2="122" pathLength="1"/>
-        <circle class="ring" id="ring" cx="500" cy="110" r="10"/>
-        <g id="points"></g>
-        <g id="labels"></g>
-        <circle class="origin" cx="500" cy="470" r="6"/>
-      </svg>
+      <section class="abstract">
+        <h2 class="sc">Abstract</h2>
+        <p>When an AI agent decides what to do next, it usually writes out the name of the tool it wants, piece by piece. Helm takes a different route. It reads the task, the calls made so far, and the available tools once, and scores every tool. Because it never writes text, it cannot call a tool that doesn't exist.</p>
+      </section>
 
-      <div class="readout wrap">
-        <p class="status" id="demo-status">&nbsp;</p>
-        <p class="task"><span class="field-label">task</span><span id="task-text"></span><span class="caret" aria-hidden="true"></span></p>
-        <p class="prior"><span class="field-label">prior calls</span><span id="prior-calls"></span></p>
-        <ol class="rows" id="tool-list"></ol>
-        <p class="note">Illustrative example.</p>
-      </div>
-    </section>
+      <section>
+        <h2><span class="sec">&sect;1</span> The problem</h2>
+        <p>Agents pick tools by writing the name out word by word, the same way they write a sentence.<label class="sn-ref" for="sn1">1</label><span class="sidenote" id="sn1"><span class="sn-num">1</span> Strictly, token by token. A token is a short piece of text, often part of a word, so a name like <code>get_weather_forecast</code> takes several of them.</span></p>
+        <p>Each piece is another trip through the model before the agent can act, so the choice is slow. And because the model is writing freely, it sometimes produces a name that looks right but is not in the toolbox at all.</p>
 
-    <section class="api wrap" aria-labelledby="api-title">
-      <p class="section-label">API</p>
-      <h2 id="api-title">One request. Every tool scored.</h2>
-      <div class="code-pair">
-        <figure class="code">
-          <figcaption>Request</figcaption>
-<pre><code><span class="k">POST</span> /rank
-
-{
-  <span class="p">"task"</span>: <span class="s">"Refund the customer's most recent order"</span>,
-  <span class="p">"tools"</span>: [
-    { <span class="p">"name"</span>: <span class="s">"search_orders"</span>, <span class="p">"description"</span>: <span class="s">"Find orders"</span> },
-    { <span class="p">"name"</span>: <span class="s">"issue_refund"</span>, <span class="p">"description"</span>: <span class="s">"Refund a payment"</span> },
-    { <span class="p">"name"</span>: <span class="s">"Finish"</span>, <span class="p">"description"</span>: <span class="s">"End the task"</span> }
-  ]
-}</code></pre>
+        <figure class="sketch" aria-label="Sketch comparing writing a tool name with scoring the toolbox">
+          <div class="sk-cols">
+            <div class="sk-col">
+              <p class="sk-head"><span class="sc">Writing the name</span><span class="sk-count" id="gen-count"></span></p>
+              <ol class="sk-steps" id="gen-steps"></ol>
+              <p class="sk-verdict" id="gen-verdict"></p>
+            </div>
+            <div class="sk-col">
+              <p class="sk-head"><span class="sc">Helm</span><span class="sk-count" id="helm-count"></span></p>
+              <ol class="sk-rank" id="helm-rows"></ol>
+            </div>
+          </div>
+          <figcaption><span class="sc">Sketch.</span> The task from Figure 1, decided two ways. Under <em>writing the name</em>, the name comes out one piece at a time; most generated names are valid, and every other pass shows the rare case where the name is invented. That half is schematic. Under <em>Helm</em>, all seven tools are scored in one pass, using the real output from Figure 1.</figcaption>
         </figure>
-        <figure class="code">
-          <figcaption>Response</figcaption>
-<pre><code>{
-  <span class="p">"ranked"</span>: [
-    { <span class="p">"name"</span>: <span class="s">"search_orders"</span>, <span class="p">"score"</span>: <span class="n">2.31</span>, <span class="p">"prob"</span>: <span class="n">0.62</span> },
-    { <span class="p">"name"</span>: <span class="s">"issue_refund"</span>, <span class="p">"score"</span>: <span class="n">1.23</span>, <span class="p">"prob"</span>: <span class="n">0.21</span> },
-    { <span class="p">"name"</span>: <span class="s">"Finish"</span>, <span class="p">"score"</span>: <span class="n">0.38</span>, <span class="p">"prob"</span>: <span class="n">0.09</span> }
-  ]
-}</code></pre>
+      </section>
+
+      <section>
+        <h2><span class="sec">&sect;2</span> How Helm works</h2>
+        <p>Helm puts the task, the calls made so far, and each tool's name and description into one prompt, and reads it in a single pass. From that pass it takes one vector that sums up the situation, and one vector for each tool, drawn from the words of that tool's name. It compares the situation with each tool, which gives every tool a score, and sorts the tools by score.<label class="sn-ref" for="sn2">2</label><span class="sidenote" id="sn2"><span class="sn-num">2</span> The model is Qwen2.5-1.5B-Instruct with a small LoRA adapter and a scoring head. The <code>prob</code> values are a softmax over the tools in one request: a ranking signal, not a calibrated probability.</span></p>
+        <p>Nothing is generated. The only possible answers are the tools you sent.</p>
+
+        <figure class="diagram">
+          <svg viewBox="0 0 640 220" role="img" aria-labelledby="diag-title">
+            <title id="diag-title">Task, calls so far, and tools are read in one pass, producing a situation vector and one vector per tool, which are compared to produce a ranking.</title>
+            <defs>
+              <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0.5 L7 4 L0 7.5" fill="none" stroke="currentColor" stroke-width="1"/>
+              </marker>
+            </defs>
+            <g fill="none" stroke="currentColor" stroke-width="0.9">
+              <rect x="1" y="14" width="118" height="40"/>
+              <rect x="1" y="90" width="118" height="40"/>
+              <rect x="1" y="166" width="118" height="40"/>
+              <line x1="119" y1="34" x2="168" y2="34" marker-end="url(#arrow)"/>
+              <line x1="119" y1="110" x2="168" y2="110" marker-end="url(#arrow)"/>
+              <line x1="119" y1="186" x2="168" y2="186" marker-end="url(#arrow)"/>
+              <rect x="170" y="14" width="130" height="192"/>
+              <line x1="300" y1="60" x2="352" y2="60" marker-end="url(#arrow)"/>
+              <line x1="300" y1="152" x2="352" y2="152" marker-end="url(#arrow)"/>
+              <line x1="362" y1="66" x2="414" y2="48" marker-end="url(#arrow)"/>
+              <line x1="362" y1="136" x2="414" y2="126" marker-end="url(#arrow)"/>
+              <line x1="362" y1="150" x2="414" y2="148" marker-end="url(#arrow)"/>
+              <line x1="362" y1="164" x2="414" y2="170" marker-end="url(#arrow)"/>
+              <line x1="430" y1="60" x2="486" y2="100" marker-end="url(#arrow)"/>
+              <line x1="430" y1="150" x2="486" y2="116" marker-end="url(#arrow)"/>
+              <circle cx="508" cy="108" r="20"/>
+              <line x1="528" y1="108" x2="560" y2="108" marker-end="url(#arrow)"/>
+              <line x1="568" y1="92" x2="636" y2="92"/>
+              <line x1="568" y1="108" x2="616" y2="108"/>
+              <line x1="568" y1="124" x2="596" y2="124"/>
+            </g>
+            <g class="diag-text">
+              <text x="60" y="39" text-anchor="middle">task</text>
+              <text x="60" y="115" text-anchor="middle">calls so far</text>
+              <text x="60" y="191" text-anchor="middle">tools</text>
+              <text x="235" y="104" text-anchor="middle">one pass</text>
+              <text x="235" y="124" text-anchor="middle">over the prompt</text>
+              <text x="388" y="96" text-anchor="middle" class="diag-small">situation</text>
+              <text x="388" y="200" text-anchor="middle" class="diag-small">one per tool</text>
+              <text x="508" y="152" text-anchor="middle" class="diag-small">compare</text>
+              <text x="602" y="152" text-anchor="middle" class="diag-small">rank</text>
+            </g>
+          </svg>
+          <figcaption><span class="sc">Diagram.</span> One read of the prompt gives a vector for the situation and one for each tool. Comparing them gives the scores.</figcaption>
         </figure>
-      </div>
-      <p class="note">Example values.</p>
-    </section>
+      </section>
 
-    <section class="results wrap" aria-labelledby="results-title">
-      <p class="section-label">Results</p>
-      <h2 id="results-title">Measured, not promised.</h2>
-      <div class="points">
-        <div class="point">
-          <p class="figure">0%</p>
-          <h3>Never invents a tool</h3>
-          <p>0% invented tool names, vs 0.9% for the usual generate-the-name approach.</p>
-        </div>
-        <div class="point">
-          <p class="figure">97.5%</p>
-          <h3>The right tool, close at hand</h3>
-          <p>Correct tool in the top 5 97.5% of the time, vs 90.7%.</p>
-        </div>
-        <div class="point">
-          <p class="figure">2.5x</p>
-          <h3>About 2.5x faster</h3>
-          <p>247 ms per decision vs 632 ms on a laptop.</p>
-        </div>
-      </div>
-      <p class="caption">Research results on ToolBench with Qwen2.5-1.5B across 3 runs. Top-1 accuracy is on par with the baseline (64.0% vs 66.6%).</p>
-    </section>
+      <section>
+        <h2><span class="sec">&sect;3</span> An example</h2>
+        <p>Figure 1 is a real request. The agent has already searched for flights, so the useful next step is the weather forecast, and that is what Helm ranks first.<label class="sn-ref" for="sn3">3</label><span class="sidenote" id="sn3"><span class="sn-num">3</span> <code>Finish</code>, the action for stopping and answering, is added to the list automatically when it is left out, because the model was trained with it present.</span></p>
 
-    <section class="contact wrap">
-      <p>For inquiries, email <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a></p>
-      <p class="etymology">"Aethis" comes from aether, the invisible layer the Greeks believed everything moved through. A helm is what you steer with.</p>
-    </section>
-  </main>
+        <figure class="fig-code">
+          <div class="code" id="fig1">
+            <p class="code-label sc">Request</p>
+<pre class="req"><span class="k">POST</span> /rank
+<span class="f">task</span>          I am flying from San Francisco to Tokyo next
+              Friday. Find me a flight and tell me what the
+              weather will be like when I land.
+<span class="f">calls so far</span>  search_flights  SFO to HND, 2026-10-30
+<span class="f">tools</span>         search_flights, get_weather_forecast,
+              convert_currency, book_hotel,
+              get_exchange_rates, translate_text</pre>
+            <p class="code-label sc">Response</p>
+            <ol class="resp">
+              <li><span class="r">1</span><span class="n">get_weather_forecast</span><span class="p">0.768</span></li>
+              <li><span class="r">2</span><span class="n">search_flights</span><span class="p">0.080</span></li>
+              <li><span class="r">3</span><span class="n">Finish</span><span class="p">0.048</span></li>
+              <li><span class="r">4</span><span class="n">get_exchange_rates</span><span class="p">0.044</span></li>
+              <li><span class="r">5</span><span class="n">book_hotel</span><span class="p">0.044</span></li>
+              <li><span class="r">6</span><span class="n">convert_currency</span><span class="p">0.013</span></li>
+              <li><span class="r">7</span><span class="n">translate_text</span><span class="p">0.003</span></li>
+            </ol>
+            <p class="latency">latency 184 ms (Apple Silicon)</p>
+          </div>
+          <figcaption><span class="sc">Figure 1.</span> A request to Helm and its ranked response.</figcaption>
+        </figure>
+      </section>
 
-  <footer class="site-footer wrap">
-    <span>&copy; <span id="year">2026</span> Aethis Labs</span>
-    <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a>
-  </footer>
+      <section>
+        <h2><span class="sec">&sect;4</span> Results</h2>
+        <p>We compared Helm with the usual approach: the same model, fine-tuned with the same budget, writing out the tool name. Helm is about as accurate on its first pick, more often has the right tool in its top five, never invents a name, and decides faster.<label class="sn-ref" for="sn4">4</label><span class="sidenote" id="sn4"><span class="sn-num">4</span> ToolBench, Qwen2.5-1.5B, mean of 3 runs. Top-1 accuracy is on par with the baseline; Helm's advantages are reliability and speed.</span></p>
+
+        <table class="booktabs">
+          <thead>
+            <tr><th scope="col"></th><th scope="col">Helm</th><th scope="col">Generate the name</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Correct first pick</th><td>64.0%</td><td>66.6%</td></tr>
+            <tr><th scope="row">Correct tool in top 5</th><td>97.5%</td><td>90.7%</td></tr>
+            <tr><th scope="row">Invented tool names</th><td>0%</td><td>0.9%</td></tr>
+            <tr><th scope="row">Time per decision</th><td>247 ms</td><td>632 ms</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2><span class="sec">&sect;5</span> Limits</h2>
+        <ol class="limits">
+          <li>Helm ranks tool names only, not arguments. Your agent still writes the call.</li>
+          <li>Each request takes 2 to 10 tools.</li>
+          <li>It was trained on RapidAPI-style tools, and has not been tested on other kinds of toolsets.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2><span class="sec">&sect;6</span> Access</h2>
+        <p>Helm is in private preview. To try it, write to <a href="mailto:yash@aethislabs.com">yash@aethislabs.com</a>.</p>
+      </section>
+    </article>
+
+    <footer class="colophon">
+      <p class="name-note"><span class="sc">On the name.</span> "Aethis" comes from aether, the invisible layer the Greeks believed everything moved through. A helm is what you steer with.</p>
+      <p class="foot-line">
+        <span>&copy; <span id="year">2026</span> Aethis Labs</span>
+        <a href="https://github.com/YashDThapliyal/aethis-helm">Helm on GitHub</a>
+        <a href="https://github.com/YashDThapliyal/aethislabs-site">Source for this page</a>
+      </p>
+    </footer>
+  </div>
 
   <script src="/main.js"></script>
 </body>
