@@ -7,8 +7,8 @@
   --serif: "EB Garamond", "Times New Roman", Times, serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --col: 34rem;
-  --side: 15rem;
-  --gutter: 3rem;
+  --side: 13rem;
+  --gutter: 2.2rem;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -30,11 +30,12 @@ a { color: inherit; text-decoration-thickness: 0.06em; text-underline-offset: 0.
 a:hover { text-decoration-thickness: 0.1em; }
 code, pre { font-family: var(--mono); font-size: 0.72rem; font-variant-numeric: normal; }
 p code { font-size: 0.78em; }
+code { hyphens: none; white-space: nowrap; }
 .sc { font-variant-caps: all-small-caps; letter-spacing: 0.06em; font-variant-numeric: lining-nums; }
 
-/* Page: one text column, with a margin to its right for sidenotes. */
+/* Page: one centered text column; sidenotes hang into the right margin. */
 .page {
-  max-width: calc(var(--col) + var(--gutter) + var(--side));
+  max-width: var(--col);
   margin: 0 auto;
   padding: 0 1.5rem 3rem;
   box-sizing: content-box;
@@ -133,7 +134,7 @@ figcaption .sc { color: var(--ink); }
   top: 0;
   height: 1.35rem;
   display: grid;
-  grid-template-columns: 1.4em minmax(0, 1fr) 3.2rem 2.8em;
+  grid-template-columns: 1.4em minmax(0, 1fr) 3rem 3.2em;
   gap: 0.4rem;
   align-items: center;
   color: var(--light);
@@ -197,8 +198,8 @@ figcaption .sc { color: var(--ink); }
 .foot-line { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; margin: 0; }
 
 /* Narrow screens: sidenotes drop into the text column. */
-@media (max-width: 960px) {
-  .page { max-width: var(--col); }
+/* Below this width there is no room for the margin, so sidenotes drop into the text column. */
+@media (max-width: 1300px) {
   .sidenote {
     float: none;
     display: block;
