@@ -146,19 +146,21 @@
 
       <section>
         <h2><span class="sec">&sect;4</span> Results</h2>
-        <p>We compared Helm with the usual approach: the same model, fine-tuned with the same budget, writing out the tool name. Helm is about as accurate on its first pick, more often has the right tool in its top five, never invents a name, and decides faster.<label class="sn-ref" for="sn4">4</label> <span class="sidenote" id="sn4"><span class="sn-num">4</span> ToolBench, Qwen2.5-1.5B, mean of 3 runs. Top-1 accuracy is on par with the baseline; Helm's advantages are reliability and speed.</span></p>
+        <p>We compared Helm with the usual approach: the same model, fine-tuned with the same budget, writing out the tool name. Helm never invents a name, decides 2.6 times faster, and misses the right tool from its top five 3.7 times less often. On the very first pick it is 2.6 points behind.<label class="sn-ref" for="sn4">4</label> <span class="sidenote" id="sn4"><span class="sn-num">4</span> ToolBench, Qwen2.5-1.5B, mean of 3 runs. Top-1 accuracy is on par with the baseline; Helm's advantages are reliability and speed.</span></p>
 
         <table class="booktabs">
           <thead>
-            <tr><th scope="col"></th><th scope="col">Helm</th><th scope="col">Generate the name</th></tr>
+            <tr><th scope="col"></th> <th scope="col">Helm</th> <th scope="col">Generate the name</th> <th scope="col">Difference</th></tr>
           </thead>
           <tbody>
-            <tr><th scope="row">Correct first pick</th><td>64.0%</td><td>66.6%</td></tr>
-            <tr><th scope="row">Correct tool in top 5</th><td>97.5%</td><td>90.7%</td></tr>
-            <tr><th scope="row">Invented tool names</th><td>0%</td><td>0.9%</td></tr>
-            <tr><th scope="row">Time per decision</th><td>247 ms</td><td>632 ms</td></tr>
+            <tr><th scope="row">Invented tool names</th> <td>0%</td> <td>0.9%</td> <td class="diff">none invented</td></tr>
+            <tr><th scope="row">Time per decision</th> <td>247 ms</td> <td>632 ms</td> <td class="diff">2.6x faster</td></tr>
+            <tr><th scope="row">Correct tool in top 5</th> <td>97.5%</td> <td>90.7%</td> <td class="diff">+6.8 points</td></tr>
+            <tr><th scope="row">Correct first pick</th> <td>64.0%</td> <td>66.6%</td> <td class="diff">2.6 points lower</td></tr>
           </tbody>
         </table>
+        <p class="table-note">Top 5 misses fall from 9.3% to 2.5%, 3.7 times fewer. Speed is 632 ms divided by 247 ms.</p>
+        <p>The first-pick numbers are close: 64.0% against 66.6%, a gap of 2.6 points. The absolute level reflects the small 1.5B model both systems share, so the comparison is like for like. What Helm adds is that its mistakes stay inside the toolbox and close to the top, and that it gets there faster.</p>
       </section>
 
       <section>

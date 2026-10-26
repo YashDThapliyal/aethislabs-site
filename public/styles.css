@@ -186,6 +186,9 @@ figcaption .sc { color: var(--ink); }
 .booktabs th:first-child { text-align: left; font-weight: 400; }
 .booktabs td, .booktabs thead th:not(:first-child) { padding-left: 1.2rem; }
 
+.booktabs .diff { font-style: italic; color: var(--gray); }
+.table-note { font-size: 0.74rem; color: var(--gray); margin: 0.3rem 0 1.2rem; }
+
 /* Limits */
 .limits { margin: 0; padding-left: 1.3rem; }
 .limits li { margin-bottom: 0.35rem; padding-left: 0.2rem; }
@@ -221,7 +224,8 @@ figcaption .sc { color: var(--ink); }
   .sk-col { padding-right: 0; }
   .sk-col + .sk-col { border-left: 0; border-top: 1px solid var(--hair); padding-left: 0; }
   .code pre { font-size: 0.64rem; }
-  .booktabs { font-size: 0.85rem; }
+  .booktabs { font-size: 0.78rem; }
+  .booktabs td, .booktabs thead th:not(:first-child) { padding-left: 0.6rem; }
   .diag-text text { font-size: 19px; }
   .diag-text .diag-small { font-size: 17px; }
 }
